@@ -6,7 +6,7 @@
 <title>Be My Valentine 💘</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-body, html { height:100%; font-family:'Comic Sans MS', Arial, sans-serif; }
+html, body { height:100%; font-family:'Comic Sans MS', Arial, sans-serif; overflow:hidden; }
 #cover {
   position:fixed; top:0; left:0; width:100%; height:100%;
   background: linear-gradient(135deg, #ff758c, #ff7eb3);
@@ -33,7 +33,7 @@ button {
 </head>
 <body>
 
-<div id="cover">Tap anywhere to start your Valentine surprise 💘</div>
+<div id="cover">💘 Tap anywhere to start your Valentine surprise 💘</div>
 
 <div class="container">
   <audio id="bgMusic" loop>
@@ -56,27 +56,15 @@ const photo = document.getElementById("photo");
 const text = document.getElementById("text");
 const music = document.getElementById("bgMusic");
 
-// Function to start music on first click
-function startMusic() {
-  music.play();
-  // Remove listener so it only triggers once
-  cover.removeEventListener("click", startMusic);
-  yesBtn.removeEventListener("click", startMusic);
-  noBtn.removeEventListener("click", startMusic);
-}
-
-// Cover click → hide cover + show container
+// Cover tap → play music + show container
 cover.addEventListener("click", () => {
-  container.style.display = "flex";
+  music.play().catch(()=>{}); // Play music (browser may still block sometimes)
   cover.style.display = "none";
-  startMusic();
+  container.style.display = "flex";
 });
 
-// Play music if she clicks YES or NO
-yesBtn.addEventListener("click", startMusic);
-noBtn.addEventListener("click", startMusic);
-
-// NO button runs away when hovered
+// NO button initially on top of YES
+// NO button moves away on hover or click
 function moveNo() {
   noBtn.style.left = Math.random() * 70 + "%";
   noBtn.style.top = Math.random() * 80 + "px";
@@ -84,14 +72,15 @@ function moveNo() {
 noBtn.addEventListener("mouseover", moveNo);
 noBtn.addEventListener("click", moveNo);
 
-// YES button action
+// YES button
 yesBtn.addEventListener("click", () => {
+  music.play(); // Play music if not already
   text.innerHTML = "I knew you would say YES 💕🥰";
   photo.src = "photo2.jpg";
   confetti();
 });
 
-// Confetti function
+// Confetti
 function confetti() {
   for (let i=0;i<120;i++){
     const c=document.createElement("div");
@@ -100,4 +89,10 @@ function confetti() {
     c.style.background=["#ff2e63","#ffd166","#06d6a0","#4cc9f0"][Math.floor(Math.random()*4)];
     c.style.animationDuration=Math.random()*3+2+"s";
     document.body.appendChild(c);
-    setTi
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+</script>
+
+</body>
+</html>
